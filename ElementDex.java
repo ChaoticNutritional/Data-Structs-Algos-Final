@@ -1,6 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.Map;
+import java.util.HashMap;
 
 public class ElementDex {
     // ELEMENT CLASS DECLARATION
@@ -13,6 +16,38 @@ public class ElementDex {
             this.atomicNumber = anAtomicNumber;
             this.symbol = aSymbol;
             this.name = aName;
+        }
+
+        // HASH MAP
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, atomicNumber, symbol);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof Element)) {
+                return false;
+            }
+            Element other = (Element) obj;
+            return Objects.equals(name, other.name) && atomicNumber == other.atomicNumber
+                    && Objects.equals(symbol, other.symbol);
+        }
+
+        // Getters for the attributes
+        public String getName() {
+            return name;
+        }
+
+        public int getAtomicNumber() {
+            return atomicNumber;
+        }
+
+        public String getSymbol() {
+            return symbol;
         }
     }
 
@@ -182,7 +217,7 @@ public class ElementDex {
         }
     }
 
-    // BST FOR SYMB
+    // BST FOR SYMBOL
     public static class BinarySearchTreeBySymb {
         private Node root;
 
@@ -229,7 +264,7 @@ public class ElementDex {
             String currSymbol = current.element.symbol;
 
             if (symbol.compareToIgnoreCase(currSymbol) == 0) {
-    
+
                 return current;
             }
 
@@ -259,8 +294,8 @@ public class ElementDex {
         }
     }
 
-    public static void main(String[] args) {
-
+    public static void BSTImplementation()
+    {
         BinarySearchTreeByNum bstNums = new BinarySearchTreeByNum();
         BinarySearchTreeByName bstNames = new BinarySearchTreeByName();
         BinarySearchTreeBySymb bstSymb = new BinarySearchTreeBySymb();
@@ -285,7 +320,7 @@ public class ElementDex {
             }
             endTime = System.nanoTime();
 
-            System.out.println("TIME REQUIRED TO ADD ELEMENTS TO 3 TREES: " + (endTime - startTime) / 1000000.0 + "ms" );
+            System.out.println("TIME REQUIRED TO ADD ELEMENTS TO 3 TREES: " + (endTime - startTime) / 1000000.0 + "ms");
 
             scanner.close();
 
@@ -340,5 +375,76 @@ public class ElementDex {
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
         }
+
+    }
+    
+    public static void HashMapImplementation()
+    {
+        Map<Object, Element> elementMap = new HashMap<>();
+
+        try {
+            File file = new File("elements.txt");
+            Scanner scanner = new Scanner(file);
+
+            long startTime = System.nanoTime();
+            long endTime;
+
+            file = new File("elements.txt");
+            startTime = System.nanoTime();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split("\t");
+                int atomicNumber = Integer.parseInt(parts[0]);
+                String symbol = parts[1];
+                String name = parts[2];
+                Element element = new Element(atomicNumber, symbol, name);
+                elementMap.put(element.getName(), element);
+                elementMap.put(element.getAtomicNumber(), element);
+                elementMap.put(element.getSymbol(), element);
+            }
+            endTime = System.nanoTime();
+            System.out.println(
+                    "TIME REQUIRED TO ADD ELEMENTS TO SINGLE HASHMAP: " + (endTime - startTime) / 1000000.0 + "ms");
+
+            scanner.close();
+
+            Scanner scanner2 = new Scanner(System.in);
+            String input = "";
+
+            while (!input.equalsIgnoreCase("STOP")) {
+                System.out.println("SEARCH FOR AN ELEMENT (BY NAME, NUMBER or SYMBOL) Type 'STOP' to end\n");
+
+                input = scanner2.nextLine();
+
+                if (input.equalsIgnoreCase("STOP")) {
+                    break;
+                }
+
+                Element searched;
+                if (input.matches("^\\d+$")) {
+                    searched = elementMap.get(Integer.parseInt(input));
+                } else {
+                    searched = elementMap.get(input);
+                }
+
+                if (searched != null) {
+                    System.out.println(searched.name);
+                } else {
+                    System.out.println("ELEMENT NOT FOUND\n");
+                }
+            }
+            System.out.println("Goodbye!");
+            scanner2.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found.");
+        }
+    }
+    public static void main(String[] args) {
+        // BST IMPLEMENTATION
+        BSTImplementation();
+
+        // HASH MAP IMPLEMENTATION
+        HashMapImplementation();
     }
 }
