@@ -408,13 +408,13 @@ public class ElementDex {
 
             scanner.close();
 
-            Scanner scanner2 = new Scanner(System.in);
+            scanner = new Scanner(System.in);
             String input = "";
 
             while (!input.equalsIgnoreCase("STOP")) {
                 System.out.println("SEARCH FOR AN ELEMENT (BY NAME, NUMBER or SYMBOL) Type 'STOP' to end\n");
 
-                input = scanner2.nextLine();
+                input = scanner.nextLine();
 
                 if (input.equalsIgnoreCase("STOP")) {
                     break;
@@ -434,7 +434,7 @@ public class ElementDex {
                 }
             }
             System.out.println("Goodbye!");
-            scanner2.close();
+            scanner.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
